@@ -19,8 +19,8 @@ agent Orchestrator extends mams.PassiveMAMSAgent {
         console.println("In !init()");
         !has("music");
         cartago.println("music was retrieved...");
-        !is("registered");
-        cartago.println("registered...");
+        !is("ready");
+        cartago.println("ready...");
     }
 
     rule +!has("music") : ~has("music") {
@@ -31,9 +31,9 @@ agent Orchestrator extends mams.PassiveMAMSAgent {
         +has("music");
     }
 
-    rule +!is("registered") : ~is("registered") & url("track", string url) {
+    rule +!is("ready") : ~is("ready") & url("track", string url) {
         !put("http://localhost:9000/music/info", url, int code, string content);
         if (code ~= 200) S.fail();
-        +is("registered");
+        +is("ready");
     }   
 }

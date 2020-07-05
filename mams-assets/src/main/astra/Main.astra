@@ -2,12 +2,6 @@ agent Main extends mams.MAMSAgent {
     module System system;
     module Console console;
 
-     types local {
-        formula has(string);
-        formula is(string);
-    }
-
-
 	rule +!main(list args) {
 		MAMSAgent::!setup();
 
@@ -18,21 +12,14 @@ agent Main extends mams.MAMSAgent {
         system.createAgent("orchestrator", "Orchestrator");
         system.sleep(1000);
 
-        !has("assets");
+        !pushAsset("a", "aa");
+        system.sleep(1000);
+        !pushAsset("b", "bb");
     }
 
-    rule +!has("assets") : ~is("pushed") {
-        string jsonBodyOne = hal.toJsonString(content(title("q"), image("fda")));
+    rule +!pushAsset(string title, string image) {
+        string jsonBodyOne = hal.toJsonString(content(title(title), image(image)));
         !post("http://localhost:9000/static/info", jsonBodyOne, int codeOne, string contentOne);
         if (codeOne ~= 200) S.fail();
-
-        system.sleep(1000);
-
-        string jsonBodyTwo = hal.toJsonString(content(title("u"), image("aa")));
-        !post("http://localhost:9000/static/info", jsonBodyTwo, int codeTwo, string contentTwo);
-        if (codeTwo ~= 200) S.fail();
-
-        +is("pushed");
     }
-
 }
