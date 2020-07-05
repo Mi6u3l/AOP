@@ -1,0 +1,39 @@
+import mams.HALConverter;
+
+agent Orchestrator extends mams.PassiveMAMSAgent {
+    module Console console;
+    module System system;
+    module HALConverter hal;
+
+     types local {
+        formula has(string);
+        formula is(string);
+        formula url(string, string);
+    }
+
+  
+    initial !init();
+
+    rule +!init() {
+        MAMSAgent::!init();
+        console.println("In !init()");
+        !has("music");
+        cartago.println("music was retrieved...");
+        !is("registered");
+        cartago.println("registered...");
+    }
+
+    rule +!has("music") : ~has("music") {
+        !get("http://localhost:8080/music", int code, string content);
+        funct f = hal.toRawFunct("content", content);
+        string jsonTrack = hal.toJsonString(f);
+        +url("track", jsonTrack);
+        +has("music");
+    }
+
+    rule +!is("registered") : ~is("registered") & url("track", string url) {
+        !put("http://localhost:9000/music/info", url, int code, string content);
+        if (code ~= 200) S.fail();
+        +is("registered");
+    }   
+}

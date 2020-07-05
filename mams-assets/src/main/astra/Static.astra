@@ -1,0 +1,17 @@
+agent Static extends mams.PassiveMAMSAgent {
+    module Console console;
+    module System system;
+    
+    initial !init();
+
+    rule +!init() {
+        console.println("In !init()");
+        MAMSAgent::!init();
+
+        console.println("Agent Initialised");
+        !created("base");
+        
+        console.println("Setting up assets resource");
+        !listResource("info", "Asset");
+    }
+}
