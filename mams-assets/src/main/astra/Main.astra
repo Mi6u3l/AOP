@@ -12,9 +12,9 @@ agent Main extends mams.MAMSAgent {
         system.createAgent("orchestrator", "Orchestrator");
         system.sleep(1000);
 
-        !pushAsset("a", "aa");
+        !pushAsset("The Oasis", "https://res.cloudinary.com/dlkwghthx/image/upload/v1594551733/Oasis_vl5fkn.jpg");
         system.sleep(1000);
-        !pushAsset("b", "bb");
+        !pushAsset("Wonderwall", "https://res.cloudinary.com/dlkwghthx/image/upload/v1594551738/Oasis_Wonderwall_qeo9yj.png");
     }
 
     rule +!pushAsset(string title, string image) {
